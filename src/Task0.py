@@ -15,12 +15,17 @@ def main():
     """
     print(
         "First record of texts, {} texts {} at time {}".format(
-            texts[0][0], texts[0][1], texts[0][2]
+            texts[0][0] if len(texts) > 0 else None,
+            texts[0][1] if len(texts) > 0 else None,
+            texts[0][2] if len(texts) > 0 else None,
         )
     )
     print(
         "Last record of calls, {} calls {} at time {}, lasting {} seconds".format(
-            calls[-1][0], calls[-1][1], calls[-1][2], calls[-1][3]
+            calls[-1][0] if len(calls) > 0 else None,
+            calls[-1][1] if len(calls) > 0 else None,
+            calls[-1][2] if len(calls) > 0 else None,
+            calls[-1][3] if len(calls) > 0 else 0,
         )
     )
 
