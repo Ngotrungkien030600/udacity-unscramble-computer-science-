@@ -13,7 +13,7 @@ def read_csv(csv_files, delimiter=","):
     """    
        
     with open(csv_files, 'r') as f:
-        reader = csv.reader(f, delimiter=delimiter)
-        contents = list(reader)
+        reader = csv.reader(f, delimiter=delimiter) # Read contents from csv file
+        contents = list(reader) # append all contents read from csv file to the empty lists
         
-    return contents
+    return contents # returns multiple contents from csv file.

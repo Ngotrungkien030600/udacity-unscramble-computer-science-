@@ -1,8 +1,8 @@
 from helpers import read_csv
 
 
-texts = read_csv(csv_files="./src/files/texts.csv")
-calls = read_csv(csv_files="./src/files/calls.csv")
+texts = read_csv(csv_files="./src/files/texts.csv")  # Read the contents from texts.csv.
+calls = read_csv(csv_files="./src/files/calls.csv")  # Read the contents from calls.csv.
 
 
 def get_longest_calling_duration():
@@ -13,25 +13,25 @@ def get_longest_calling_duration():
     """
     telephone_numbers = {}
 
-    for caller, receiver, timestamp, duration in calls:
+    for caller, receiver, _, duration in calls:
         telephone_numbers[caller] = (
             int(duration)
             if caller not in telephone_numbers
             else (telephone_numbers[caller] + int(duration))
-        )
+        )  # Adds the caller's number and its duration to the telephone_numbers dictionary.
         telephone_numbers[receiver] = (
             int(duration)
             if receiver not in telephone_numbers
             else (telephone_numbers[receiver] + int(duration))
-        )
+        )  # Adds the receiver's number and its duration to the telephone_number dictionary
 
-    longest_duration = 0
-    telephone = ""
+    longest_duration = 0  # longest call duration of the telephone number
+    telephone = ""  # The telephone number which have the longest duration
 
     for key, value in telephone_numbers.items():
         if longest_duration < value:
-            longest_duration = value
-            telephone = key
+            longest_duration = value  # get the longest call duration from telephone_numbers dictionary (maximum value of telephone_numbers dictionary)
+            telephone = key  # get the telephone number which have the longest duration (key from telephone_numbers dictionary which have the maximum value)
 
     return (
         telephone,
