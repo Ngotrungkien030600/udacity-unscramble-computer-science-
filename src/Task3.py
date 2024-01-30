@@ -1,3 +1,4 @@
+import re
 from helpers import read_csv
 
 
@@ -38,8 +39,33 @@ def main():
     to other fixed lines in Bangalore."
     The percentage should have 2 decimal digits
     """
-    # TODO: Implement detail for task 3
-    print("TASK 3 implement")
+    bangalore_calls = [call for call in calls if call[0].startswith("(080)")]
+    bangalore_receivers = [call[1] for call in bangalore_calls]
+    bangalore_receivers_area_codes = []
+
+    for receiver in bangalore_receivers:
+        if re.search(r"\(\w+\)", receiver):
+            area_code = re.search(r"(\(.*?\))", receiver).group()
+
+            if area_code not in bangalore_receivers_area_codes:
+                bangalore_receivers_area_codes.append(area_code)
+        elif re.search(r"(^[7|8|9])", receiver):
+            area_code = receiver[:4]
+            if area_code not in bangalore_receivers_area_codes:
+                bangalore_receivers_area_codes.append(area_code)
+
+    print("The numbers called by people in Bangalore have codes:")
+    for code in bangalore_receivers_area_codes:
+        print(code)
+
+    bangalore_receivers_080 = [
+        call for call in bangalore_receivers if call.startswith("(080)")
+    ]
+    print(
+        "{} percent of calls from fixed lines in Bangalore are calls to other fixed lines in Bangalore.".format(
+            round(len(bangalore_receivers_080) / len(bangalore_receivers) * 100, 2)
+        )
+    )
 
 
 if __name__ == "__main__":
