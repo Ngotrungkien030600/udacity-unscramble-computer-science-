@@ -44,15 +44,15 @@ def main():
     bangalore_receivers_area_codes = []
 
     for receiver in bangalore_receivers:
-        if re.search(r"\(\w+\)", receiver):
+        if re.search(r"\(\w+\)", receiver): # Fixed lines start with an area code enclosed in brackets. The area codes vary in length but always begin with 0.
             area_code = re.search(r"(\(.*?\))", receiver).group()
             if area_code not in bangalore_receivers_area_codes:
                 bangalore_receivers_area_codes.append(area_code)
-        elif receiver[:3].startswith("140"):
+        elif receiver[:3].startswith("140"): # Telemarketers' numbers have no parentheses or space, but they start with the area code 140.
             area_code = receiver[:3]
             if area_code not in bangalore_receivers_area_codes:
                 bangalore_receivers_area_codes.append(area_code)
-        elif re.search(r"^[7|8|9]", receiver):
+        elif re.search(r"^[7|8|9]", receiver): # Mobile numbers have no parentheses, but have a space in the middle of the number to help readability. The prefix of a mobile number is its first four digits, and they always start with 7, 8 or 9.
             area_code = receiver[:4]
             if area_code not in bangalore_receivers_area_codes:
                 bangalore_receivers_area_codes.append(area_code)
@@ -62,9 +62,11 @@ def main():
     for code in merge_sort(bangalore_receivers_area_codes):
         print(code)
 
+    # All the calls made from a number starting with "(080)"
     bangalore_receivers_080_prefix = [
         call for call in bangalore_receivers if call.startswith("(080)")
     ]
+    
     print(
         "{} percent of calls from fixed lines in Bangalore are calls to other fixed lines in Bangalore.".format(
             round(
