@@ -19,6 +19,19 @@ def read_csv(csv_files, delimiter=","):
     return contents # returns multiple contents from csv file.
 
 def merge_sort(items, order='asc'):
+    """Sort multiple items with merge sort using divide and conquer methods
+
+    Args:
+        items (list): The unsorted list
+        order (str, optional): The sorting order method. Defaults to 'asc'.
+
+    Raises:
+        Exception: The exception for invalid sorting order
+
+    Returns:
+        list: The sorted list
+    """
+    
     if len(items) > 1:
         mid_index = len(items) // 2 # Gets the middle index
         left_items = items[:mid_index] # Gets the half-left side of the list "items"
@@ -62,4 +75,4 @@ def merge_sort(items, order='asc'):
             right_index += 1
             main_index += 1
         
-        return items
+        return items # The sorted list
