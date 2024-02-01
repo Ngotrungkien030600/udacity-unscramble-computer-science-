@@ -30,7 +30,7 @@ In this project, you will:
 
 The time complexity for getting first text from texts.csv and the last call from calls.csv is O(2) ~= O(1)
 
-### Task 1: Total time complexity is O(n)
+### Task 1: Total time complexity is O(n^2)
 
 ``` Python
 def get_unique_numbers():
@@ -63,7 +63,7 @@ def get_unique_numbers():
     return telephone_numbers
 ```
 
-The time complexity for selecting the unique telephone numbers from the function get_unique_numbers is O(n) (best case indicated that the texts.csv and calls.csv have only one content and the worst case indicated that the texts.csv and calls.csv have n contents by iterate to the entire list after reading all contents from csv files) by interating through the zipped lists, it takes total n times
+The time complexity for selecting the unique telephone numbers from the function get_unique_numbers is O(n^2) (O(1) for best case indicated that the texts.csv and calls.csv have only one content and the worst case is O(n^2) indicated that the texts.csv and calls.csv have n contents by iterate to the entire list after reading all contents from csv files) by interating through the zipped lists takes n times and n for using not in operator, it takes total n^2 times
 
 ### Task 2: Total time is O(n)
 
@@ -103,7 +103,7 @@ def get_longest_calling_duration():
 
 ```
 
-Adding all the telephone numbers dictionary and its total call duration by iterating through the read contents of CSV files takes n times, and finding the longest duration by iterating through the added telephone numbers dictionary takes n times, so the total times is n + n = 2n and it is concluded to O(n)
+Adding all the telephone numbers dictionary and its total call duration by iterating through the read contents of CSV files takes n times, and finding the longest duration by iterating through the added telephone numbers dictionary takes n times and using the branching conditional with not in operator takes n times, so the total times is n^2 + n^2 = 2n^2 and it is concluded to O(n^2)
 
 ### Task 3: Total time is O(nlog(n))
 
@@ -118,6 +118,26 @@ bangalore_receivers = [call[1] for call in bangalore_calls]
 ```
 
 The total time of adding the incoming calls from the list of bangalore calls is n times for worst case and 1 for best case by iterate over the entire list => O(n)
+
+```Python
+    bangalore_receivers_area_codes = []
+
+    for receiver in bangalore_receivers:
+        if re.search(r"\(\w+\)", receiver): # Fixed lines start with an area code enclosed in brackets. The area codes vary in length but always begin with 0.
+            area_code = re.search(r"(\(.*?\))", receiver).group()
+            if area_code not in bangalore_receivers_area_codes:
+                bangalore_receivers_area_codes.append(area_code)
+        elif receiver[:3].startswith("140"): # Telemarketers' numbers have no parentheses or space, but they start with the area code 140.
+            area_code = receiver[:3]
+            if area_code not in bangalore_receivers_area_codes:
+                bangalore_receivers_area_codes.append(area_code)
+        elif re.search(r"^[7|8|9]", receiver): # Mobile numbers have no parentheses, but have a space in the middle of the number to help readability. The prefix of a mobile number is its first four digits, and they always start with 7, 8 or 9.
+            area_code = receiver[:4]
+            if area_code not in bangalore_receivers_area_codes:
+                bangalore_receivers_area_codes.append(area_code)
+```
+
+The time of for loop takes n times when iterating the list bangalore_receivers, and the time of invoking re.search takes m times based on the string length and select the distinct area code with not in operator takes n time, so the total times is O(n^2*m), we can conclude it is O(n^3) because the re.search run in the if function and the not in operator to select the distinct area_code
 
 ```Python
 for code in merge_sort(bangalore_receivers_area_codes):
@@ -167,7 +187,7 @@ The total time for getting the size of "bangalore_receivers_080_prefix" and size
             incoming_calls.append(call[1])
 ```
 
-The total time for adding distinct items from list of csv contents files (texts.csv and calls.csv) is n times for the worst case and 1 for the best case => O(n)
+The total time for adding distinct items from list of csv contents files (texts.csv and calls.csv) is n^2 (including the for loop and not in operator inside the loop) times for the worst case and 1 for the best case => O(n^2)
 
 ```Python
     telemakers = []
@@ -182,7 +202,7 @@ The total time for adding distinct items from list of csv contents files (texts.
 
 ```
 
-The total time for adding the telemakers by checking the outgoing texts, incoming texts and incoming calls takes n times for the worst case and 1 for the best case => O(n)
+Let n is the length of outgoing_calls, m is the length of outgoing_texts, p is the length of incoming_texts and q is the length of incoming_calls, The best case is O(1) if there are only 1 items to add from outgoing_texts, incoming_texts and incoming_calls, and the worst case is O(n*(m+p+q)), we can conclude it is O(n^2) because the not in run only once.
 
 ```Python
     print("These numbers could be telemarketers:")
