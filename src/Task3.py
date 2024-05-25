@@ -15,11 +15,11 @@ def extract_area_codes_and_prefixes(number):
     Returns:
         str: The extracted area code or prefix.
     """
-    if number.startswith("("):  # Fixed lines
+    if number.startswith("("):  # Area code enclosed in parentheses for fixed lines
         return re.search(r"\((.*?)\)", number).group(1)
-    elif " " in number and number[0] in "789":  # Mobile numbers
+    elif " " in number and number[0] in "789":  # First digit and space indicate mobile numbers
         return number[:4]
-    elif number.startswith("140"):  # Telemarketers
+    elif number.startswith("140"):  # Telemarketers have a specific prefix
         return "140"
     return None
 
