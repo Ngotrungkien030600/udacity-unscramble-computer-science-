@@ -1,48 +1,27 @@
 from helpers import read_csv
 
-
-texts = read_csv(csv_files="./src/files/texts.csv")  # Read the contents from texts.csv
-calls = read_csv(csv_files="./src/files/calls.csv")  # Read the contents from calls.csv
-
+texts = read_csv(csv_files="./src/files/texts.csv")  # Read data from texts.csv
+calls = read_csv(csv_files="./src/files/calls.csv")  # Read data from calls.csv
 
 def main():
     """
     TASK 0:
-    What is the first record of texts and what is the last record of calls?
-    Print messages:
+    Display the first record from the texts and the last record from the calls.
+    Messages:
     "First record of texts, <incoming number> texts <answering number> at time <time>"
-    "Last record of calls, <incoming number> calls <answering number> at time <time>, lasting <during> seconds"
+    "Last record of calls, <incoming number> calls <answering number> at time <time>, lasting <duration> seconds"
     """
-    print(
-        "First record of texts, {} texts {} at time {}".format(
-            texts[0][0]
-            if len(texts) > 0
-            else None,  # Get 1st item from 1st line in texts.csv if there are any contents from texts.csv, otherwise it is None value
-            texts[0][1]
-            if len(texts) > 0
-            else None,  # Get 2nd item from 1st line in texts.csv if there are any contents from texts.csv, otherwise it is None value
-            texts[0][2]
-            if len(texts) > 0
-            else None,  # Get 3rd item from 1st line in texts.csv if there are any contents from texts.csv, otherwise it is None value
-        )
-    )
-    print(
-        "Last record of calls, {} calls {} at time {}, lasting {} seconds".format(
-            calls[-1][0]
-            if len(calls) > 0
-            else None,  # Get 1st item from 1st line in calls.csv if there are any contents from texts.csv, otherwise it is None value
-            calls[-1][1]
-            if len(calls) > 0
-            else None,  # Get 2nd item from 1st line in calls.csv if there are any contents from texts.csv, otherwise it is None value
-            calls[-1][2]
-            if len(calls) > 0
-            else None,  # Get 3rd item from 1st line in calls.csv if there are any contents from texts.csv, otherwise it is None value
-            calls[-1][3]
-            if len(calls) > 0
-            else 0,  # Get 4th item from 1st line in calls.csv if there are any contents from texts.csv, otherwise it is 0 value
-        )
-    )
+    if texts:
+        first_text = texts[0]
+        print(f"First record of texts, {first_text[0]} texts {first_text[1]} at time {first_text[2]}")
+    else:
+        print("No texts records available")
 
+    if calls:
+        last_call = calls[-1]
+        print(f"Last record of calls, {last_call[0]} calls {last_call[1]} at time {last_call[2]}, lasting {last_call[3]} seconds")
+    else:
+        print("No calls records available")
 
 if __name__ == "__main__":
     main()

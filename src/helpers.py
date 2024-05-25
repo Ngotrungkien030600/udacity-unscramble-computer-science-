@@ -1,65 +1,63 @@
 import csv
 
-
-def read_csv(csv_files, delimiter=","):
-    """Reads contents from csv files
-
-    Args:
-        csv_files (str): The directory of csv file
-        delimiter (str, optional): The csv content seperator. Defaults to ",".
-
-    Returns:
-        list: The contents from csv file
-    """    
-       
-    with open(csv_files, 'r') as f:
-        reader = csv.reader(f, delimiter=delimiter) # Read contents from csv file
-        contents = list(reader) # append all contents read from csv file to the empty lists
-        
-    return contents # returns multiple contents from csv file.
-
-def merge_sort(items, comparator=lambda x,y: x < y):
-    """Sort multiple items with merge sort using divide and conquer methods
-
-    Args:
-        items (list): The unsorted list
-        order (str, optional): The sorting order method. Defaults to 'asc'.
-
-    Raises:
-        Exception: The exception for invalid sorting order
-
-    Returns:
-        list: The sorted list
+def read_csv(csv_file, delimiter=","):
     """
-    
+    Reads the contents of a CSV file.
+
+    Args:
+        csv_file (str): The path to the CSV file.
+        delimiter (str, optional): The character separating values in the CSV. Defaults to ",".
+
+    Returns:
+        list: A list containing the rows from the CSV file.
+    """
+    with open(csv_file, 'r') as f:
+        reader = csv.reader(f, delimiter=delimiter)
+        contents = list(reader)  # Store the CSV contents in a list
+
+    return contents  # Return the list containing CSV rows
+
+def merge_sort(items, comparator=lambda x, y: x < y):
+    """
+    Sorts a list using the merge sort algorithm.
+
+    Args:
+        items (list): The list to be sorted.
+        comparator (function, optional): A function defining the sorting order. Defaults to ascending order.
+
+    Returns:
+        list: The sorted list.
+    """
     if len(items) > 1:
-        mid_index = len(items) // 2 # Gets the middle index
-        left_items = items[:mid_index] # Gets the half-left side of the list "items"
-        right_items = items[mid_index:] # Gets the right-side of the list "items"
-        
-        merge_sort(left_items, comparator) # Recursively call to sort the half-left side
-    
-        merge_sort(right_items, comparator) # Recursively call to sort the half-right side
-    
-        left_index = right_index = main_index = 0 # Initiate the left_index for half-left side items, right_index for half-right side items and main_index for the orginal list
-        while left_index < len(left_items) and right_index < len(right_items):
-            if comparator(left_items[left_index],right_items[right_index]):
-                items[main_index] = left_items[left_index]  # merge half-left side to the orginal list.
-                left_index += 1
+        mid = len(items) // 2  # Find the middle index
+        left_half = items[:mid]  # Divide the list into left half
+        right_half = items[mid:]  # Divide the list into right half
+
+        merge_sort(left_half, comparator)  # Recursively sort the left half
+        merge_sort(right_half, comparator)  # Recursively sort the right half
+
+        i = j = k = 0  # Initialize pointers for left_half, right_half, and main list
+
+        # Merge the sorted halves back into the main list
+        while i < len(left_half) and j < len(right_half):
+            if comparator(left_half[i], right_half[j]):
+                items[k] = left_half[i]
+                i += 1
             else:
-                items[main_index] = right_items[right_index]  # merge half-right side to the orginal list
-                right_index += 1
-            main_index += 1
-        # Add the remaining items from left side to the original list.
-        while left_index < len(left_items):
-            items[main_index] = left_items[left_index]
-            left_index += 1
-            main_index += 1
-        
-        # Add the remaining items from right side to the original list.
-        while right_index < len(right_items):
-            items[main_index] = right_items[right_index]
-            right_index += 1
-            main_index += 1
-        
-        return items # The sorted list
+                items[k] = right_half[j]
+                j += 1
+            k += 1
+
+        # Copy any remaining elements of left_half
+        while i < len(left_half):
+            items[k] = left_half[i]
+            i += 1
+            k += 1
+
+        # Copy any remaining elements of right_half
+        while j < len(right_half):
+            items[k] = right_half[j]
+            j += 1
+            k += 1
+
+    return items  # Return the sorted list

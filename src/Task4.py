@@ -1,55 +1,43 @@
 from helpers import merge_sort, read_csv
 
-
+# Read the contents from the CSV files
 texts = read_csv(csv_files="./src/files/texts.csv")
 calls = read_csv(csv_files="./src/files/calls.csv")
-
 
 def main():
     """
     TASK 4:
-    The telephone company want to identify numbers that might be doing
-    telephone marketing. Create a set of possible telemarketers:
-    these are numbers that make outgoing calls but never send texts,
-    receive texts or receive incoming calls.
+    Identify numbers that might be doing telephone marketing. Telemarketers
+    make outgoing calls but do not send texts, receive texts, or receive incoming calls.
 
     Print a message:
     "These numbers could be telemarketers: "
     <list of numbers>
-    The list of numbers should be print out one per line in lexicographic order with no duplicates.
+    The list of numbers should be printed one per line in lexicographic order with no duplicates.
     """
-    outgoing_texts = []
-    incoming_texts = []
-    outgoing_calls = []
-    incoming_calls = []
+    outgoing_texts = set()
+    incoming_texts = set()
+    outgoing_calls = set()
+    incoming_calls = set()
 
-    for text, call in zip(texts, calls):
-        if text[0] not in outgoing_texts: # Select the distinct 1st text as the outgoing telephone number text
-            outgoing_texts.append(text[0])
-        if text[1] not in incoming_texts: # Select the distinct 2nd text as the incoming telephone number text
-            incoming_texts.append(text[1])
-        if call[0] not in outgoing_calls: # Select the distinct 1st call as the outgoing telephone number text
-            outgoing_calls.append(call[0])
-        if call[1] not in incoming_calls: # Select the distinct 2nd call as the incoming telephone number text
-            incoming_calls.append(call[1])
+    # Populate the sets with unique numbers
+    for text in texts:
+        outgoing_texts.add(text[0])
+        incoming_texts.add(text[1])
+    
+    for call in calls:
+        outgoing_calls.add(call[0])
+        incoming_calls.add(call[1])
 
-    telemakers = []
-
-    # gets the telemakers which is not the outgoing and incoming texts and it is the outgoing call
-    for call in outgoing_calls:
-        if (
-            call not in outgoing_texts
-            and call not in incoming_texts
-            and call not in incoming_calls
-        ):
-            telemakers.append(call)
+    # Identify potential telemarketers
+    telemarketers = outgoing_calls - outgoing_texts - incoming_texts - incoming_calls
 
     print("These numbers could be telemarketers:")
-
-    # Sort the telemakers first to display in ascended orders.
-    for telemaker in merge_sort(telemakers):
-        print(telemaker)
-
+    
+    # Sort the telemarketers and print them
+    sorted_telemarketers = merge_sort(list(telemarketers))
+    for number in sorted_telemarketers:
+        print(number)
 
 if __name__ == "__main__":
     main()

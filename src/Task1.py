@@ -1,53 +1,38 @@
 from helpers import read_csv
 
-
-texts = read_csv(csv_files="./src/files/texts.csv")  # Read the contents from texts.csv
-calls = read_csv(csv_files="./src/files/calls.csv")  # Read the contents from calls.csv
-
+# Read the contents from the CSV files
+texts = read_csv(csv_files="./src/files/texts.csv")
+calls = read_csv(csv_files="./src/files/calls.csv")
 
 def get_unique_numbers():
-    """Select unique telephone numbers from both calls and texts csv files
+    """
+    Extracts unique telephone numbers from both calls and texts CSV files.
 
     Returns:
-        list: The list contains unique telephone numbers
+        set: A set containing unique telephone numbers.
     """
-    telephone_numbers = []
+    unique_numbers = set()
 
-    for text, call in zip(texts, calls):
-        if (
-            text[0] not in telephone_numbers
-        ):  # Add 1st telephone number from texts.csv file if it is not in telephone_numbers list.
-            telephone_numbers.append(text[0])
-        if (
-            text[1] not in telephone_numbers
-        ):  # Add 2nd telephone number from texts.csv file if it is not in telephone_numbers list.
-            telephone_numbers.append(text[1])
+    # Add numbers from texts.csv to the set
+    for text in texts:
+        unique_numbers.add(text[0])
+        unique_numbers.add(text[1])
 
-        if (
-            call[0] not in telephone_numbers
-        ):  # Add 1st telephone number from calls.csv file if it is not in telephone_numbers list.
-            telephone_numbers.append(call[0])
-        if (
-            call[1] not in telephone_numbers
-        ):  # Add 2nd telephone number from calls.csv file if it is not in telephone_numbers list.
-            telephone_numbers.append(call[1])
+    # Add numbers from calls.csv to the set
+    for call in calls:
+        unique_numbers.add(call[0])
+        unique_numbers.add(call[1])
 
-    return telephone_numbers
-
+    return unique_numbers
 
 def main():
     """
     TASK 1:
-    How many different telephone numbers are there in the records?
-    Print a message:
-    "There are <count> different telephone numbers in the records."
+    Determines the number of unique telephone numbers in the records.
+    Prints a message with the count of unique telephone numbers.
     """
-    print(
-        "There are {} different telephone numbers in the records.".format(
-            len(get_unique_numbers())
-        )
-    )
-
+    unique_numbers = get_unique_numbers()
+    print(f"There are {len(unique_numbers)} different telephone numbers in the records.")
 
 if __name__ == "__main__":
     main()

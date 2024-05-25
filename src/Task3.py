@@ -1,80 +1,59 @@
 import re
 from helpers import merge_sort, read_csv
 
-
+# Read the contents from the CSV files
 texts = read_csv(csv_files="./src/files/texts.csv")
 calls = read_csv(csv_files="./src/files/calls.csv")
 
+def extract_area_codes_and_prefixes(number):
+    """
+    Extracts the area code or prefix from a given telephone number.
+    
+    Args:
+        number (str): The telephone number to extract the area code or prefix from.
+    
+    Returns:
+        str: The extracted area code or prefix.
+    """
+    if number.startswith("("):  # Fixed lines
+        return re.search(r"\((.*?)\)", number).group(1)
+    elif " " in number and number[0] in "789":  # Mobile numbers
+        return number[:4]
+    elif number.startswith("140"):  # Telemarketers
+        return "140"
+    return None
 
 def main():
     """
     TASK 3:
-    (080) is the area code for fixed line telephones in Bangalore.
-    Fixed line numbers include parentheses, so Bangalore numbers
-    have the form (080)xxxxxxx.)
+    Analyzes the call records to find area codes and prefixes called by Bangalore numbers and
+    computes the percentage of calls from Bangalore to Bangalore.
 
-    Part A: Find all of the area codes and mobile prefixes called by people
-    in Bangalore. In other words, the calls were initiated by "(080)" area code
-    to the following area codes and mobile prefixes:
-    - Fixed lines start with an area code enclosed in brackets. The area
-      codes vary in length but always begin with 0.
-    - Mobile numbers have no parentheses, but have a space in the middle
-      of the number to help readability. The prefix of a mobile number
-      is its first four digits, and they always start with 7, 8 or 9.
-    - Telemarketers' numbers have no parentheses or space, but they start
-      with the area code 140.
-
-    Print the answer as part of a message:
-    "The numbers called by people in Bangalore have codes:"
-    <list of codes>
-    The list of codes should be print out one per line in lexicographic order with no duplicates.
-
-    Part B: What percentage of calls from fixed lines in Bangalore are made
-    to fixed lines also in Bangalore? In other words, of all the calls made
-    from a number starting with "(080)", what percentage of these calls
-    were made to a number also starting with "(080)"?
-
-    Print the answer as a part of a message::
-    "<percentage> percent of calls from fixed lines in Bangalore are calls
-    to other fixed lines in Bangalore."
-    The percentage should have 2 decimal digits
+    Part A: Identify all unique area codes and mobile prefixes called by people in Bangalore.
+    Part B: Calculate the percentage of calls from fixed lines in Bangalore to other Bangalore fixed lines.
     """
+    # Part A: Find area codes and mobile prefixes called by Bangalore numbers
     bangalore_calls = [call for call in calls if call[0].startswith("(080)")]
-    bangalore_receivers = [call[1] for call in bangalore_calls]
-    bangalore_receivers_area_codes = []
+    bangalore_receivers_codes = set()
 
-    for receiver in bangalore_receivers:
-        if re.search(r"\(\w+\)", receiver): # Fixed lines start with an area code enclosed in brackets. The area codes vary in length but always begin with 0.
-            area_code = re.search(r"(\(.*?\))", receiver).group()
-            if area_code not in bangalore_receivers_area_codes:
-                bangalore_receivers_area_codes.append(area_code)
-        elif receiver[:3].startswith("140"): # Telemarketers' numbers have no parentheses or space, but they start with the area code 140.
-            area_code = receiver[:3]
-            if area_code not in bangalore_receivers_area_codes:
-                bangalore_receivers_area_codes.append(area_code)
-        elif re.search(r"^[7|8|9]", receiver): # Mobile numbers have no parentheses, but have a space in the middle of the number to help readability. The prefix of a mobile number is its first four digits, and they always start with 7, 8 or 9.
-            area_code = receiver[:4]
-            if area_code not in bangalore_receivers_area_codes:
-                bangalore_receivers_area_codes.append(area_code)
+    for call in bangalore_calls:
+        code = extract_area_codes_and_prefixes(call[1])
+        if code:
+            bangalore_receivers_codes.add(code)
+
+    sorted_codes = merge_sort(list(bangalore_receivers_codes))
 
     print("The numbers called by people in Bangalore have codes:")
-
-    for code in merge_sort(bangalore_receivers_area_codes):
+    for code in sorted_codes:
         print(code)
 
-    # All the calls made from a number starting with "(080)"
-    bangalore_receivers_080_prefix = [
-        call for call in bangalore_receivers if call.startswith("(080)")
+    # Part B: Calculate the percentage of calls from Bangalore to Bangalore
+    bangalore_to_bangalore_calls = [
+        call for call in bangalore_calls if call[1].startswith("(080)")
     ]
-    
-    print(
-        "{} percent of calls from fixed lines in Bangalore are calls to other fixed lines in Bangalore.".format(
-            round(
-                len(bangalore_receivers_080_prefix) / len(bangalore_receivers) * 100, 2
-            )
-        )
-    )
+    percentage = (len(bangalore_to_bangalore_calls) / len(bangalore_calls)) * 100
 
+    print(f"{percentage:.2f} percent of calls from fixed lines in Bangalore are calls to other fixed lines in Bangalore.")
 
 if __name__ == "__main__":
     main()
